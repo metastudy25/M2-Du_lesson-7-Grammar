@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDEN 문법 정원 · 중2 Lesson 7</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f7ef; --card:#ffffff; --ink:#1f2d1f; --sub:#5b6b5b; --line:#dde7d6;
+  --green:#2f8f4e; --green-d:#1f6b38; --leaf:#7cc576; --sky:#4a90d9; --sun:#f5b82e;
+  --red:#e25a4f; --pink:#f08aa0; --purple:#8a6fd1; --soft:#eaf4e4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(circle at 10% 0%,#e3f1da 0,transparent 40%),radial-gradient(circle at 100% 100%,#fdf3d8 0,transparent 40%);}
+button{font-family:inherit;cursor:pointer;border:none}
+input{font-family:inherit}
+.wrap{max-width:820px;margin:0 auto;padding:16px}
+.title-font{font-family:'Jua',sans-serif;letter-spacing:.5px}
+.hidden{display:none!important}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;background:var(--card);border-radius:16px;box-shadow:0 2px 10px rgba(40,80,40,.08);margin-bottom:16px;flex-wrap:wrap}
+.topbar .who{font-weight:700}
+.topbar .stat{display:flex;gap:10px;align-items:center;font-size:14px}
+.pill{background:var(--soft);padding:5px 10px;border-radius:999px;font-weight:700;font-size:13px}
+.btn{padding:11px 18px;border-radius:12px;font-weight:700;font-size:15px;transition:transform .1s,filter .15s}
+.btn:active{transform:scale(.97)}
+.btn-main{background:var(--green);color:#fff}
+.btn-main:hover{filter:brightness(1.08)}
+.btn-ghost{background:var(--soft);color:var(--green-d)}
+.btn-sm{padding:6px 12px;font-size:13px;border-radius:10px}
+.btn[disabled]{opacity:.45;cursor:default}
+
+/* login */
+.login-box{max-width:420px;margin:40px auto;background:var(--card);border-radius:24px;padding:30px 24px;box-shadow:0 8px 30px rgba(40,80,40,.12);text-align:center}
+.login-box h1{font-size:30px;color:var(--green-d);margin-bottom:4px}
+.login-box .lesson{color:var(--sub);font-size:14px;margin-bottom:22px}
+.tabs{display:flex;background:var(--soft);border-radius:12px;padding:4px;margin-bottom:18px}
+.tabs button{flex:1;padding:10px;border-radius:9px;background:transparent;font-weight:700;color:var(--sub)}
+.tabs button.on{background:#fff;color:var(--green-d);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.field{text-align:left;margin-bottom:12px}
+.field label{display:block;font-size:13px;color:var(--sub);margin-bottom:5px;font-weight:500}
+.field input{width:100%;padding:13px 14px;border:2px solid var(--line);border-radius:12px;font-size:16px;outline:none}
+.field input:focus{border-color:var(--leaf)}
+.msg{min-height:22px;font-size:14px;margin:8px 0;color:var(--red)}
+.msg.ok{color:var(--green)}
+.roster-info{font-size:12px;color:var(--sub);margin-top:14px;display:flex;justify-content:center;gap:8px;align-items:center;flex-wrap:wrap}
+.saved-ids{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:4px 0 12px}
+.saved-ids button{background:var(--soft);padding:6px 12px;border-radius:999px;font-size:13px;color:var(--green-d);font-weight:700}
+
+/* home */
+.hero{background:linear-gradient(135deg,#2f8f4e,#58b06a);color:#fff;border-radius:22px;padding:22px;margin-bottom:18px;position:relative;overflow:hidden}
+.hero h2{font-size:24px;margin-bottom:6px}
+.hero p{font-size:14px;opacity:.95;line-height:1.6}
+.hero .tree{position:absolute;right:14px;bottom:-6px;font-size:64px;opacity:.9}
+.progress-bar{height:10px;background:rgba(255,255,255,.3);border-radius:99px;margin-top:12px;overflow:hidden;max-width:70%}
+.progress-bar div{height:100%;background:var(--sun);border-radius:99px;transition:width .5s}
+.stages{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.stage{background:var(--card);border-radius:18px;padding:16px;text-align:left;box-shadow:0 2px 10px rgba(40,80,40,.07);border:2px solid transparent;transition:transform .15s,border-color .15s;position:relative}
+.stage:hover{transform:translateY(-2px);border-color:var(--leaf)}
+.stage .ic{font-size:30px}
+.stage h3{font-size:18px;margin:6px 0 4px}
+.stage p{font-size:13px;color:var(--sub);line-height:1.5}
+.stage .best{position:absolute;top:12px;right:12px;font-size:12px;font-weight:700;color:var(--green-d);background:var(--soft);padding:3px 8px;border-radius:99px}
+.stage .stars{color:var(--sun);font-size:14px;margin-top:6px}
+.wrongbtn{margin-top:14px;width:100%}
+
+/* game common */
+.game-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px;flex-wrap:wrap}
+.game-head h2{font-size:22px;color:var(--green-d)}
+.hud{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.hearts{font-size:18px;letter-spacing:2px}
+.qbar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:14px}
+.qbar div{height:100%;background:var(--leaf);transition:width .3s}
+.qcard{background:var(--card);border-radius:20px;padding:22px;box-shadow:0 4px 18px rgba(40,80,40,.09)}
+.qnum{display:inline-block;background:var(--green);color:#fff;font-weight:900;padding:4px 10px;border-radius:9px;font-size:14px;margin-bottom:10px}
+.qtag{display:inline-block;background:#fff4d6;color:#9a6a00;font-weight:700;padding:4px 9px;border-radius:9px;font-size:12px;margin-left:6px}
+.qtext{font-size:17px;font-weight:700;line-height:1.6;margin-bottom:12px;white-space:pre-line}
+.qbox{background:#f7faf4;border:1.5px dashed #c5d9bb;border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.75;margin-bottom:14px;white-space:pre-line;font-family:'Noto Sans KR',sans-serif}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;padding:13px 14px;border-radius:12px;background:#f6f8f4;border:2px solid var(--line);font-size:15px;line-height:1.5;color:var(--ink)}
+.opt:hover:not([disabled]){border-color:var(--leaf);background:#fff}
+.opt.correct{background:#e3f6e5;border-color:var(--green);color:var(--green-d);font-weight:700}
+.opt.wrong{background:#fde9e7;border-color:var(--red);color:#a33}
+.opt.sel{border-color:var(--sky);background:#eaf3fc}
+.opt .no{font-weight:900;margin-right:6px}
+.sa-field{margin-bottom:10px}
+.sa-field label{font-size:13px;font-weight:700;color:var(--sub);display:block;margin-bottom:4px}
+.sa-field input{width:100%;padding:12px;border:2px solid var(--line);border-radius:10px;font-size:16px;outline:none}
+.sa-field input:focus{border-color:var(--leaf)}
+.sa-field input.ok{border-color:var(--green);background:#e3f6e5}
+.sa-field input.no{border-color:var(--red);background:#fde9e7}
+.feedback{margin-top:14px;padding:14px;border-radius:14px;font-size:14px;line-height:1.7;animation:pop .3s}
+.feedback.good{background:#e3f6e5;border-left:5px solid var(--green)}
+.feedback.bad{background:#fde9e7;border-left:5px solid var(--red)}
+.feedback b.big{font-size:16px;display:block;margin-bottom:4px}
+.feedback .ans{font-weight:700;color:var(--green-d)}
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.shake{animation:shake .3s}
+.combo{position:fixed;top:30%;left:50%;transform:translate(-50%,-50%);font-family:'Jua';font-size:44px;color:var(--sun);text-shadow:0 3px 0 #b07d00,0 6px 20px rgba(0,0,0,.2);pointer-events:none;animation:comboUp 1s forwards;z-index:50}
+@keyframes comboUp{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-90%) scale(1)}}
+
+/* concept cards */
+.flash{background:var(--card);border-radius:22px;padding:24px;min-height:340px;box-shadow:0 6px 22px rgba(40,80,40,.1);animation:pop .3s}
+.flash .tag{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--soft);color:var(--green-d);margin-bottom:8px}
+.flash h3{font-size:22px;margin-bottom:12px;color:var(--green-d)}
+.flash .body{font-size:15px;line-height:1.85}
+.flash .body .ex{background:#f7faf4;border-radius:10px;padding:10px 12px;margin:8px 0;border-left:4px solid var(--leaf)}
+.flash .body .warn{background:#fff4d6;border-radius:10px;padding:10px 12px;margin:8px 0;border-left:4px solid var(--sun)}
+.flash table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}
+.flash th,.flash td{border:1px solid var(--line);padding:7px;text-align:left;vertical-align:top}
+.flash th{background:var(--soft)}
+.hl{background:linear-gradient(transparent 55%,#ffe58a 55%);font-weight:700}
+.blue{color:var(--sky);font-weight:700}.red{color:var(--red);font-weight:700}.grn{color:var(--green);font-weight:700}
+.dots{display:flex;gap:5px;justify-content:center;margin:14px 0}
+.dots span{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dots span.on{background:var(--green);width:20px;border-radius:99px}
+.mini-check{margin-top:14px;padding:12px;background:#eef5fd;border-radius:12px}
+.mini-check .q{font-weight:700;margin-bottom:8px;font-size:14px}
+.mini-check .row{display:flex;gap:6px;flex-wrap:wrap}
+.mini-check button{padding:7px 12px;border-radius:9px;background:#fff;border:2px solid #cfe0f3;font-weight:700;font-size:14px}
+.mini-check button.ok{border-color:var(--green);background:#e3f6e5}
+.mini-check button.no{border-color:var(--red);background:#fde9e7}
+
+/* for/of game */
+.arena{position:relative;height:380px;background:linear-gradient(#e6f3fb,#f3f9ee);border-radius:20px;overflow:hidden;box-shadow:inset 0 0 0 2px var(--line)}
+.drop{position:absolute;left:50%;transform:translateX(-50%);background:#fff;padding:12px 18px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.12);text-align:center;width:88%;max-width:440px}
+.drop .adj{font-family:'Jua';font-size:30px;color:var(--green-d)}
+.drop .sent{font-size:14px;color:var(--sub);margin-top:2px}
+.ground{position:absolute;bottom:0;left:0;right:0;height:8px;background:var(--leaf)}
+.baskets{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.basket{padding:18px;border-radius:18px;font-family:'Jua';font-size:30px;color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.15)}
+.basket small{display:block;font-family:'Noto Sans KR';font-size:12px;font-weight:500;opacity:.9}
+.basket.for{background:var(--sky)}.basket.of{background:var(--pink)}
+.basket:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.timer{font-family:'Jua';font-size:22px}
+.flashfx{position:absolute;inset:0;pointer-events:none;animation:fx .35s}
+@keyframes fx{from{opacity:.5}to{opacity:0}}
+
+/* it identity */
+.it-sent{font-size:20px;line-height:1.7;text-align:center;padding:24px 10px;font-weight:500}
+.it-sent mark{background:#ffe58a;padding:0 4px;border-radius:5px;font-weight:900}
+.it-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.it-choices button{padding:16px 6px;border-radius:14px;font-weight:900;font-size:15px;color:#fff}
+.it-choices .c1{background:var(--green)}.it-choices .c2{background:var(--sky)}.it-choices .c3{background:var(--purple)}
+.it-choices button small{display:block;font-weight:500;font-size:11px;opacity:.9;margin-top:2px}
+
+/* blocks */
+.answer-zone{min-height:70px;border:2.5px dashed #bcd3b0;border-radius:14px;padding:10px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;margin-bottom:12px;background:#fbfdf9}
+.pool{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.blk{padding:9px 13px;border-radius:10px;background:#fff;border:2px solid var(--line);font-weight:700;font-size:16px;box-shadow:0 3px 0 var(--line)}
+.blk.used{visibility:hidden}
+.answer-zone .blk{background:#eaf4e4;border-color:var(--leaf);box-shadow:0 3px 0 #b6d9a8}
+
+/* result */
+.result{text-align:center;padding:30px 20px}
+.result .big{font-size:70px}
+.result h2{font-size:28px;color:var(--green-d);margin:8px 0}
+.result .score{font-size:18px;margin-bottom:6px}
+.result .stars{font-size:36px;color:var(--sun);letter-spacing:4px;margin:8px 0}
+
+/* exam list */
+.exam-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.exam-filter button{padding:8px 12px;border-radius:10px;background:var(--card);font-weight:700;font-size:13px;border:2px solid var(--line)}
+.exam-filter button.on{border-color:var(--green);color:var(--green-d);background:var(--soft)}
+.num-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-bottom:14px}
+.num-grid button{aspect-ratio:1;border-radius:8px;font-weight:700;font-size:12px;background:var(--card);border:1.5px solid var(--line);color:var(--sub)}
+.num-grid button.ok{background:#d8f0dc;border-color:var(--green);color:var(--green-d)}
+.num-grid button.no{background:#fbdcd8;border-color:var(--red);color:#a33}
+.num-grid button.cur{outline:3px solid var(--sun)}
+@media (max-width:520px){
+  .wrap{padding:12px}
+  .num-grid{grid-template-columns:repeat(10,1fr);gap:3px}
+  .num-grid button{font-size:10px}
+  .qtext{font-size:16px}
+  .it-sent{font-size:17px}
+  .hero .tree{font-size:46px}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* =========================================================
+   설정: 구글 시트 (이름 / 비번 열)  → 비번 열을 '아이디'로 사용
+   명단 추가 = 시트에 행 추가 (앱 수정 불필요)
+   ========================================================= */
+const SHEET_ID = '17ARTCYwJFKBGhZmtsHnyGxLce4Jl5wd9dRmvZFMTJhs';
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+const APP_KEY = 'edenL7';
+
+/* ---------- 저장소 ---------- */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(APP_KEY+'_'+k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(APP_KEY+'_'+k, JSON.stringify(v)); }catch(e){} }
+};
+let roster = store.get('roster_'+SHEET_ID, []);      // [{name,id}]
+let rosterLoaded = false;
+let user = null;                           // {name,id}
+let prog = null;                           // 학생별 진행 기록
+
+/* ---------- CSV ---------- */
+function parseCSV(text){
+  const rows=[]; let row=[], cur='', q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){cur+='"';i++;} else q=false; } else cur+=c; }
+    else{
+      if(c==='"') q=true;
+      else if(c===','){ row.push(cur); cur=''; }
+      else if(c==='\n'){ row.push(cur); rows.push(row); row=[]; cur=''; }
+      else if(c!=='\r') cur+=c;
+    }
+  }
+  if(cur!==''||row.length){ row.push(cur); rows.push(row); }
+  return rows;
+}
+async function loadRoster(){
+  try{
+    let rows;
+    try{
+      const res = await fetch(SHEET_URL + '&t=' + Date.now());
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      rows = parseCSV(await res.text()).filter(r=>r.some(c=>c.trim()));
+      if(!rows.length) throw new Error('empty');
+    }catch(fetchErr){
+      rows = await loadRosterJSONP();   // 파일로 열었거나 브라우저가 막을 때 대체 경로
+    }
+    const head = rows[0].map(h=>h.trim().toLowerCase());
+    let ni = head.findIndex(h=>/이름|name/.test(h));
+    let ii = head.findIndex(h=>/아이디|id|비번|비밀번호|password|pw|번호/.test(h));
+    let start = 1;
+    if(ni<0 || ii<0){ ni=0; ii=1; start = (ni<0&&ii<0)?0:1; }
+    roster = rows.slice(start).map(r=>({name:(r[ni]||'').trim(), id:(r[ii]||'').trim()})).filter(s=>s.name&&s.id);
+    store.set('roster_'+SHEET_ID, roster);
+    rosterLoaded = true;
+    return true;
+  }catch(e){
+    rosterLoaded = false;
+    return false;
+  }
+}
+/* 구글 시트 JSONP 방식 (fetch가 막힐 때 사용) */
+function loadRosterJSONP(){
+  return new Promise((resolve,reject)=>{
+    const cb = 'edenRoster_'+Date.now();
+    const s = document.createElement('script');
+    const timer = setTimeout(()=>{ cleanup(); reject(new Error('timeout')); }, 10000);
+    function cleanup(){ clearTimeout(timer); try{ delete window[cb]; }catch(e){ window[cb]=undefined; } s.remove(); }
+    window[cb] = (data)=>{
+      cleanup();
+      try{
+        const t = data.table;
+        const head = t.cols.map(c=>c.label||'');
+        const body = t.rows.map(r=>(r.c||[]).map(c=> c ? String(c.f!=null ? c.f : (c.v!=null ? c.v : '')) : ''));
+        const hasHead = head.some(h=>h.trim());
+        resolve((hasHead ? [head, ...body] : body).filter(r=>r.some(c=>String(c).trim())));
+      }catch(e){ reject(e); }
+    };
+    s.onerror = ()=>{ cleanup(); reject(new Error('jsonp')); };
+    s.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:${cb}&t=${Date.now()}`;
+    document.head.appendChild(s);
+  });
+}
+/* 아이디: 공백 무시, 대소문자 무시, 숫자만 있으면 앞자리 0 차이도 허용 */
+const idKey = v => { const s=String(v).replace(/\s/g,'').toLowerCase().replace(/\.0+$/,''); return /^\d+$/.test(s) ? s.replace(/^0+(?=\d)/,'') : s; };
+const sameId = (a,b)=> idKey(a) === idKey(b);
+/* 이름: 공백 무시, 시트 이름 앞 자음(ㅎ 등)·괄호 꼬리표 (중2 등) 없이 입력해도 인정 */
+const nameKeys = v => { const full=String(v).replace(/\s/g,''); const base=full.replace(/\(.*?\)|（.*?）|\[.*?\]/g,'').replace(/^[ㄱ-ㅎ]+/,''); return [full, base]; };
+const sameName = (sheetName, typed)=> { const t=String(typed).replace(/\s/g,''); return t && nameKeys(sheetName).includes(t); };
+
+/* =========================================================
+   학습 데이터
+   ========================================================= */
+const CONCEPTS = [
+ {tag:'Pattern 1 · 가주어', title:'왜 가주어 it을 쓸까?', body:`
+  영어는 <span class="hl">주어가 길고 무거운 문장(가분수 문장)</span>을 싫어해요.<br>
+  그래서 긴 to부정사 주어를 <b>문장 맨 뒤</b>로 보내고, 빈 주어 자리에 <b class="blue">가짜 주어 it</b>을 세워 둡니다.
+  <div class="ex">✗ <i>To follow the class rules</i> is important. <small>(머리가 무거운 문장)</small><br>
+  ✓ <b class="blue">It</b> is important <b class="grn">to follow the class rules</b>.</div>
+  <div class="warn">🔑 공식: <b>It is [was] + 형용사 + to + 동사원형 ~</b></div>`,
+  check:{q:'빈칸에 들어갈 말은?  ___ is fun to play soccer.', opts:['That','It','This'], a:1}},
+ {tag:'Pattern 1 · 해석법', title:'it은 "그것"이 아니에요!', body:`
+  가주어 it은 <span class="hl">해석하지 않아요.</span> 진짜 주어인 <b class="grn">to부정사부터</b> 해석합니다.
+  <div class="ex">It is fun <b class="grn">to watch a movie with friends</b>.<br>→ 친구들과 영화를 보는 것은 즐겁다.</div>
+  <b>부정문</b>: It isn't easy to exercise every day. (매일 운동하는 것은 쉽지 않다.)<br>
+  <b>의문문</b>: <b>Is it</b> possible to learn a new language? (새 언어를 배우는 것이 가능한가?)
+  <div class="warn">⚠️ to부정사 자체를 부정할 때는 <b>not을 to 바로 앞</b>에!<br>It is important <b class="red">not to be</b> late. (지각하지 <u>않는 것</u>이 중요하다.)</div>`,
+  check:{q:'"지각하지 않는 것이 중요하다" 올바른 것은?', opts:['It is important to not be late.','It is important not to be late.','It is not important to be late.'], a:1}},
+ {tag:'Pattern 1 · 의미상 주어 ①', title:'누가 하는지 밝히기: for + 목적격', body:`
+  to부정사의 동작을 <b>누가</b> 하는지 밝히고 싶으면 to 바로 앞에 <b class="blue">for + 목적격</b>을 씁니다.
+  <div class="ex">It is easy <b class="blue">for him</b> to solve the puzzle.<br>→ <u>그가</u> 그 퍼즐을 푸는 것은 쉽다.</div>
+  <div class="ex">It is dangerous <b class="blue">for children</b> to swim here.</div>
+  <div class="warn">📌 for와 쓰는 형용사: <b>easy, hard, difficult, important, necessary, possible, impossible, dangerous, safe, exciting, fun</b><br>→ 난이도 · 중요성 · 판단</div>`,
+  check:{q:'It is difficult ___ me to solve this problem.', opts:['for','of','to'], a:0}},
+ {tag:'Pattern 1 · 의미상 주어 ②', title:'성격을 칭찬/비판할 땐: of + 목적격', body:`
+  형용사가 <span class="hl">사람의 성격 · 태도</span>를 나타내면 for 대신 <b class="red">of</b>를 써요.
+  <div class="ex">It is very kind <b class="red">of you</b> to say so. (그렇게 말해주다니 당신은 정말 친절하군요.)</div>
+  <div class="ex">It was careless <b class="red">of him</b> to lose the key.</div>
+  <div class="warn">📌 of와 쓰는 형용사: <b>kind, nice, generous, polite, careless, foolish, silly, rude, cruel, wise</b><br>
+  💡 꿀팁: "<b>그 사람이</b> ~하다"가 말이 되면 of! <br>(kind → 그가 친절하다 ✓ / easy → 그가 쉽다 ✗)</div>`,
+  check:{q:'It was generous ___ her to share the food.', opts:['for','of','with'], a:1}},
+ {tag:'Pattern 1 · 시험 킬러', title:'it의 3대 쓰임 구별하기', body:`
+  <table><tr><th>구분</th><th>특징</th><th>해석</th></tr>
+  <tr><td><b class="grn">가주어</b></td><td>뒤에 진짜 주어 <b>to부정사</b>가 반드시 나옴</td><td>✗</td></tr>
+  <tr><td><b class="blue">비인칭 주어</b></td><td>날씨 · 시간 · 거리 · 요일 · 날짜 · 계절 · 명암</td><td>✗</td></tr>
+  <tr><td><b style="color:var(--purple)">지시대명사</b></td><td>앞에 나온 사물 · 동물을 가리킴</td><td>"그것"</td></tr></table>
+  <div class="ex">It is fun <u>to play soccer</u>. → 가주어<br>It is five o'clock. / It rains a lot. → 비인칭 주어<br>I have a cat. It is very cute. → 지시대명사</div>`,
+  check:{q:'It is five miles from here to the station. 의 it은?', opts:['가주어','비인칭 주어','지시대명사'], a:1}},
+ {tag:'Pattern 2 · 5형식', title:'call + 목적어 + 목적격 보어', body:`
+  call 뒤에 <b>목적어</b>와 그것을 설명하는 <b>명사(목적격 보어)</b>가 오면<br>
+  → "<span class="hl">목적어를 ~라고 부르다</span>"
+  <div class="ex">People call <b class="blue">the boy</b> <b class="red">a genius</b>.<br>→ the boy <b>=</b> a genius (동격!)</div>
+  <div class="ex">My name is Robert, but my friends call <b class="blue">me</b> <b class="red">Bob</b>.</div>
+  <div class="warn">⚠️ 함정: call 뒤에 <b>to, as, like</b>를 넣지 않아요!<br>✗ call <s>to</s> me Jenny / ✗ call him <s>as</s> MVP → ✓ call him MVP<br>⚠️ 목적어는 목적격: call <s>he</s> → call <b>him</b></div>`,
+  check:{q:'올바른 문장은?', opts:['They call him as a hero.','They call he a hero.','They call him a hero.'], a:2}},
+ {tag:'Pattern 2 · 동사군', title:'명사 보어를 쓰는 5형식 동사들', body:`
+  <table><tr><th>동사</th><th>의미</th><th>예문</th></tr>
+  <tr><td><b>call</b></td><td>~라고 부르다</td><td>People call her the dancing queen.</td></tr>
+  <tr><td><b>name</b></td><td>~라고 이름 짓다</td><td>They named their daughter Lily.</td></tr>
+  <tr><td><b>make</b></td><td>~로 만들다</td><td>Her mother made her a famous actress.</td></tr>
+  <tr><td><b>elect</b></td><td>~로 선출하다</td><td>The students elected him class president.</td></tr>
+  <tr><td><b>consider</b></td><td>~로 여기다</td><td>We consider him our best friend.</td></tr>
+  <tr><td><b>choose</b></td><td>~로 선택하다</td><td>They chose her the leader of the group.</td></tr></table>`,
+  check:{q:'They ___ their daughter Amy. (이름 짓다)', opts:['named','gave','told'], a:0}},
+ {tag:'Pattern 2 · 시험 킬러', title:'4형식 vs 5형식 (make 함정!)', body:`
+  <div class="ex"><b>4형식</b>: My mom made <b class="blue">me</b> <b class="red">a box</b>.<br>→ 나<b>에게</b> 상자<b>를</b> 만들어 주셨다. (나 <b>≠</b> 상자)</div>
+  <div class="ex"><b>5형식</b>: My mom made <b class="blue">me</b> <b class="red">a doctor</b>.<br>→ 나<b>를</b> 의사<b>로</b> 만드셨다. (나 <b>=</b> 의사)</div>
+  <div class="warn">💡 구별법: 목적어 뒤 두 명사 사이에 <b>"="</b>을 넣어 보세요.<br>말이 되면 5형식, 안 되면 4형식!</div>`,
+  check:{q:'My father made me a toy car. 는 몇 형식?', opts:['4형식','5형식'], a:0}},
+ {tag:'Pattern 2 · 형용사 보어', title:'make / keep / find + 목적어 + 형용사', body:`
+  목적격 보어 자리에는 <b>형용사</b>도 올 수 있어요. 목적어의 <b>상태</b>를 설명합니다.
+  <div class="ex">The news made him <b class="grn">happy</b>. (✗ happily)</div>
+  <div class="ex">This coat will keep you <b class="grn">warm</b>. (✗ warmly)</div>
+  <div class="ex">I found the book <b class="grn">interesting</b>.</div>
+  <div class="warn">⚠️ 우리말 해석이 "행복<b>하게</b>"처럼 부사 같아도 보어 자리에는 <b>형용사</b>!</div>`,
+  check:{q:'His jokes made us ___.', opts:['happily','happy','happiness'], a:1}},
+ {tag:'교과서 예문', title:'동아(윤정미) 7과 대표 문장', body:`
+  <div class="ex">They believe <b>it is important to remember dead people</b>.<br><small>그들은 고인을 기억하는 것이 중요하다고 믿는다.</small></div>
+  <div class="ex">It isn't easy to exercise every day.</div>
+  <div class="ex">They <b>call it the Midsummer festival</b>.</div>
+  <div class="ex">She <b>calls her cleaning robot Clean Master</b>.</div>
+  <div class="ex">People <b>call Chicago the Windy City</b>.</div>
+  🌱 이제 개념 정리 완료! 다음 단계로 가서 직접 풀어 볼까요?`,
+  check:null}
+];
+
+const BLANKS = [
+ {t:'to부정사가 주어로 쓰여 주어가 길어질 때, 주어 자리에 가짜 주어인 ( ① )를 쓴다.', a:'It', o:['It','This','That','There']},
+ {t:'가짜 주어를 쓰면 진짜 주어인 ( ② )를 문장 맨 뒤로 보낸다.', a:'to부정사구(진주어)', o:['to부정사구(진주어)','동사','목적어','형용사']},
+ {t:"가주어 it은 우리말로 '( ③ )'라고 해석하지 않는다.", a:'그것', o:['그것','이것','저것','거기']},
+ {t:'가주어 문장은 ( ④ )부터 해석하여 "~하는 것은 …하다"로 해석한다.', a:'to부정사(진주어)', o:['to부정사(진주어)','It','형용사','동사']},
+ {t:'to부정사의 동작을 행하는 주체를 to부정사 바로 앞에 밝힌 것을 ( ⑤ )라고 한다.', a:'의미상의 주어', o:['의미상의 주어','목적격 보어','가주어','간접목적어']},
+ {t:'난이도나 중요성을 나타내는 형용사 뒤에서는 ( ⑥ + 목적격 )으로 의미상의 주어를 쓴다.', a:'for', o:['for','of','to','with']},
+ {t:'kind, nice, careless, polite, silly 등 성품 형용사 뒤에서는 ( ⑦ + 목적격 )을 쓴다.', a:'of', o:['for','of','to','by']},
+ {t:"It is 3 o'clock. / It is raining. 의 it은 날씨·시간을 나타내는 ( ⑧ ) 주어이다.", a:'비인칭', o:['비인칭','가','지시','진']},
+ {t:'I bought a new watch. It is very expensive. 에서 it은 앞의 명사를 가리키는 ( ⑨ )이다.', a:'지시대명사', o:['지시대명사','가주어','비인칭 주어','관계대명사']},
+ {t:"⑨의 it은 우리말로 '( ⑩ )'이라고 해석한다.", a:'그것', o:['그것','해석 안 함','그곳','그때']},
+ {t:'「call + 목적어 + 목적격 보어」 구문은 ( ⑪ )형식 문장이다.', a:'5', o:['3','4','5','2']},
+ {t:'「call + 목적어 + 목적격 보어」는 "( ⑫ )"라고 해석한다.', a:'목적어를 ~라고 부르다', o:['목적어를 ~라고 부르다','목적어에게 ~을 주다','목적어를 부르러 가다','목적어가 ~하게 하다']},
+ {t:'명사가 목적격 보어로 올 때, 목적어와 목적격 보어는 반드시 ( ⑬ ) 관계이다.', a:'동격', o:['동격','반대','소유','수식']},
+ {t:"'~로 이름 짓다'라는 뜻의 5형식 동사는 ( ⑭ )이다.", a:'name', o:['name','give','send','tell']},
+ {t:"'~로 선출하다'라는 뜻의 5형식 동사는 ( ⑮ )이다.", a:'elect', o:['elect','ask','buy','say']},
+ {t:"'~로 만들다'라는 뜻의 5형식 동사는 ( ⑯ )이다.", a:'make', o:['make','take','bring','lend']},
+ {t:'She made me a delicious cake. 에서 me ≠ cake 이므로 ( ⑰ )형식 문장이다.', a:'4', o:['3','4','5','1']},
+ {t:'She made her son a great pianist. 에서 her son = a great pianist 이므로 ( ⑱ )형식 문장이다.', a:'5', o:['3','4','5','2']},
+ {t:'5형식 문장의 목적어 자리에는 인칭대명사의 ( ⑲ ) 형태(me, him, her 등)를 쓴다.', a:'목적격', o:['주격','소유격','목적격','재귀대명사']},
+ {t:'목적어의 상태를 설명하는 목적격 보어 자리에는 부사가 아닌 ( ⑳ )를 쓴다.', a:'형용사', o:['부사','형용사','동사','전치사']}
+];
+
+const ADJ = [
+ ['easy','for'],['hard','for'],['difficult','for'],['important','for'],['necessary','for'],['possible','for'],
+ ['impossible','for'],['dangerous','for'],['safe','for'],['exciting','for'],['fun','for'],['healthy','for'],['helpful','for'],
+ ['kind','of'],['nice','of'],['generous','of'],['polite','of'],['careless','of'],['foolish','of'],['silly','of'],
+ ['rude','of'],['cruel','of'],['wise','of']
+];
+const ADJ_TAIL = {
+  for:['to solve this puzzle','to finish the work','to swim here','to learn Korean','to read many books','to take a rest'],
+  of:['to help the old man','to say so','to lose the key','to share the food','to make such a mistake','to hold the door']
+};
+const WHO = ['him','her','you','them','me','us'];
+
+const IT_SENT = [
+ ['<mark>It</mark> is fun to play soccer.','가'],
+ ["<mark>It</mark> is five o'clock.",'비'],
+ ['I have a cat. <mark>It</mark> is very cute.','지'],
+ ['<mark>It</mark> is snowy and very cold today.','비'],
+ ['Look at the bird. <mark>It</mark> is singing beautifully.','지'],
+ ['<mark>It</mark> is dangerous to cross the street on a red light.','가'],
+ ['Where is my phone? <mark>It</mark> was on the desk.','지'],
+ ['<mark>It</mark> is Tuesday today.','비'],
+ ['<mark>It</mark> is dark outside, so turn on the light.','비'],
+ ['<mark>It</mark> is five miles from here to the station.','비'],
+ ['<mark>It</mark> is autumn, and the leaves are falling.','비'],
+ ['<mark>It</mark> is exciting to ride a roller coaster.','가'],
+ ['I bought a new cap. <mark>It</mark> looks great on me.','지'],
+ ['<mark>It</mark> is not easy for me to cook Italian food.','가'],
+ ['<mark>It</mark> rains a lot in summer.','비'],
+ ['They believe <mark>it</mark> is important to remember dead people.','가'],
+ ['This is my bag. <mark>It</mark> is very heavy.','지'],
+ ['Is <mark>it</mark> possible to learn a new language at any age?','가'],
+ ['I found a key. Is <mark>it</mark> yours?','지'],
+ ['<mark>It</mark> is necessary to drink enough water every day.','가']
+];
+const IT_NAME = {'가':'가주어','비':'비인칭 주어','지':'지시대명사'};
+const IT_WHY = {'가':'뒤에 진짜 주어(to부정사)가 있어요 → 가주어, 해석 안 함','비':'날씨·시간·거리·요일·계절·명암 → 비인칭 주어, 해석 안 함','지':'앞에 나온 사물·동물을 가리켜요 → 지시대명사, "그것"'};
+
+const BLOCKS = [
+ {k:'우리가 신선한 물을 마시는 것은 건강에 좋다.', s:'It is healthy for us to drink fresh water.'},
+ {k:'외국인들이 한국어를 배우는 것은 쉽지 않다.', s:'It is not easy for foreigners to learn Korean.'},
+ {k:'그들은 자신들의 아들을 David라고 불렀다.', s:'They called their son David.'},
+ {k:'아이들은 그 강아지를 Lucky라고 부르기로 결심했다.', s:'The children decided to call the puppy Lucky.'},
+ {k:'사람들은 그 작은 섬을 보물섬이라고 부른다.', s:'People call the small island Treasure Island.'},
+ {k:'사람들은 시카고를 Windy City라고 부른다.', s:'People call Chicago the Windy City.'},
+ {k:'그가 그 질문에 답하는 것은 불가능하다.', s:'It is impossible for him to answer the question.'},
+ {k:'그 비밀을 다른 사람들에게 말하지 않는 것이 중요하다.', s:'It is important not to tell the secret to others.'},
+ {k:'그들은 그것을 한여름 축제라고 부른다.', s:'They call it the Midsummer festival.'},
+ {k:'친구들과 영화를 보는 것은 즐겁다.', s:'It is fun to watch a movie with friends.'},
+ {k:'그렇게 말해주다니 당신은 정말 친절하군요.', s:'It is very kind of you to say so.'},
+ {k:'그녀는 자신의 청소 로봇을 Clean Master라고 부른다.', s:'She calls her cleaning robot Clean Master.'}
+];
+
+/* ---------- 실전 50제 ----------
+   type: mc(객관식) / sa(주관식, fields) / multi(복수 선택)
+   sec: A(가주어) B(call 5형식) C(통합)                      */
+const EXAM = [
+ {n:1,sec:'A',type:'mc',q:'다음 빈칸에 들어갈 말로 가장 적절한 것은?',box:'__________ is not easy to wake up early on weekends.',o:['That','This','It','What','There'],a:2,
+  e:'to부정사구(to wake up early on weekends)가 진짜 주어이므로 문두에는 가주어 It이 와야 합니다. 가주어 자리에 That이나 This는 쓸 수 없어요.'},
+ {n:2,sec:'A',type:'sa',q:'다음 두 문장이 같은 의미가 되도록 빈칸에 알맞은 말을 쓰시오.',box:'To learn a foreign language is very important.\n➔ ( ㉠ ) is very important ( ㉡ ) a foreign language.',
+  f:[{l:'㉠',acc:['It']},{l:'㉡ (두 단어)',acc:['to learn']}],e:'주어 To learn a foreign language를 뒤로 보내고 문두에 가주어 It을 둡니다.'},
+ {n:3,sec:'A',type:'mc',q:'다음 중 It이 가주어로 쓰인 문장은?',o:['It is snowy and very cold today.','Look at the bird. It is singing beautifully.','It takes about two hours to get there.','It is dangerous to cross the street on a red light.','Where is my phone? It was on the desk a minute ago.'],a:3,
+  e:'④의 It은 가주어, to cross the street on a red light가 진주어입니다. ①은 날씨 비인칭 주어, ②⑤는 지시대명사, ③은 시간 비인칭 주어예요.'},
+ {n:4,sec:'A',type:'mc',q:'다음 중 It의 쓰임이 나머지 넷과 다른 하나는?',o:['It is Tuesday today.','It is dark outside, so please turn on the light.','It is five miles from here to the station.','It is autumn, and the leaves are falling.','It is exciting to ride a roller coaster.'],a:4,
+  e:'①요일, ②명암, ③거리, ④계절의 It은 모두 비인칭 주어입니다. ⑤의 It만 진주어 to ride a roller coaster를 받는 가주어예요.'},
+ {n:5,sec:'A',type:'mc',q:'다음 빈칸에 들어갈 전치사가 나머지 넷과 다른 하나는?',o:['It is necessary ___ you to take a rest.','It is hard ___ him to finish the work alone.','It is very kind ___ her to help the old man.','It is impossible ___ us to arrive there on time.','It is important ___ students to read many books.'],a:2,
+  e:'necessary, hard, impossible, important는 일반 형용사 → for. ③ kind는 사람의 성품 → of her.'},
+ {n:6,sec:'A',type:'mc',q:'다음 빈칸 (A), (B)에 들어갈 전치사로 알맞게 짝지어진 것은?',box:'• It was foolish ( A ) him to make such a mistake.\n• It is difficult ( B ) me to solve this math problem.',o:['(A) for — (B) for','(A) of — (B) of','(A) of — (B) for','(A) for — (B) of','(A) to — (B) for'],a:2,
+  e:'foolish(어리석은)는 성품 형용사 → of, difficult(어려운)는 난이도 형용사 → for.'},
+ {n:7,sec:'A',type:'mc',q:'다음 중 어법상 어색한 문장은?',o:['It is fun to play badminton with friends.','It is safe for children to play in this playground.','It was careless for him to drop the expensive vase.','It is impossible to please everyone.','Is it possible to reserve a ticket online?'],a:2,
+  e:'careless(부주의한)는 성품 형용사이므로 for him → of him으로 고쳐야 합니다.'},
+ {n:8,sec:'A',type:'sa',q:'괄호 안의 단어를 어법에 맞게 고쳐 쓰시오.',box:'It is important (not / be) late for the appointment.',
+  f:[{l:'(not / be) →',acc:['not to be']}],e:'to부정사를 부정할 때 not은 to 바로 앞에 옵니다 → not to be late.'},
+ {n:9,sec:'A',type:'sa',q:'다음 우리말을 영작할 때 빈칸에 알맞은 말을 쓰시오.',box:'건강을 유지하기 위해서는 매일 운동하는 것이 필요하다.\n➔ It is necessary __________ every day to stay healthy.',
+  f:[{l:'빈칸 (두 단어)',acc:['to exercise']}],e:'가주어 It 뒤에 진짜 주어 to부정사 to exercise가 옵니다.'},
+ {n:10,sec:'A',type:'mc',q:'다음 대화의 빈칸에 들어갈 말로 가장 적절한 것은?',box:'A: Is it easy ______ him to play the violin?\nB: No, it is quite difficult. He needs more practice.',o:['of','for','to','with','about'],a:1,
+  e:'easy는 난이도를 나타내는 일반 형용사 → for him.'},
+ {n:11,sec:'A',type:'mc',q:'다음 중 It의 성격이 <보기>와 같은 것은?',box:'<보기> It is exciting to watch a soccer game in the stadium.',o:['It is already 11 p.m. Go to bed now.','I bought a new cap. It looks great on me.','It is not easy for me to cook Italian food.','It is very bright in this room.','How far is it from Seoul to Busan?'],a:2,
+  e:'<보기>와 ③은 모두 가주어. ①시간, ④명암, ⑤거리는 비인칭 주어, ②는 지시대명사.'},
+ {n:12,sec:'A',type:'mc',q:'다음 문장을 가주어 It을 사용해 바르게 바꿔 쓴 것은?',box:'To tell a lie to your parents is wrong.',o:['That is wrong to tell a lie to your parents.','It is wrong to tell a lie to your parents.','This is wrong to tell a lie to your parents.','There is wrong to tell a lie to your parents.','It to tell a lie to your parents is wrong.'],a:1,
+  e:'주어 To tell a lie ~를 뒤로 보내고 가주어 It을 쓴 ②가 정답.'},
+ {n:13,sec:'A',type:'mc',q:'다음 중 어법상 옳은 문장의 개수는?',box:'a. It is polite of you to hold the door open.\nb. It is easy of him to solve the puzzle.\nc. To keep a diary every day it is difficult.\nd. It is dangerous for young kids to swim alone.\ne. It was generous of her to share the food with us.',o:['1개','2개','3개','4개','5개'],a:2,
+  e:'옳은 문장은 a, d, e → 3개. b는 easy가 일반 형용사이므로 of him → for him, c는 to부정사 주어가 이미 있어 it이 중복됩니다.'},
+ {n:14,sec:'A',type:'sa',q:'주어진 단어를 올바른 순서로 배열하여 문장을 완성하시오.',box:'( to / it / for / healthy / fresh water / is / drink / us )',
+  f:[{l:'문장',acc:['It is healthy for us to drink fresh water.']}],e:'It is + 형용사 + for + 목적격 + to-v 순서입니다.'},
+ {n:15,sec:'A',type:'sa',q:'다음 문장에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오.',box:'It is very generous for Mr. Baker to donate so much money to the school.',
+  f:[{l:'틀린 부분',acc:['for']},{l:'고친 말',acc:['of']}],e:'generous(관대한)는 성품 형용사 → for를 of로.'},
+ {n:16,sec:'A',type:'sa',q:'두 문장이 같은 뜻이 되도록 빈칸에 알맞은 말을 쓰시오.',box:'You are very nice to invite us to your birthday party.\n➔ It is very nice __________ to invite us to your birthday party.',
+  f:[{l:'빈칸 (두 단어)',acc:['of you']}],e:'성격 형용사 nice → of + 목적격 → of you.'},
+ {n:17,sec:'A',type:'mc',q:'다음 중 문장의 의미가 자연스럽지 않은 것은?',o:['It is dangerous to walk alone at night.','It is easy to ride a bicycle without practicing.','It is important to wash your hands before eating.','It is impossible to live without water.','It is helpful to read English news articles.'],a:1,
+  e:'"연습 없이 자전거를 타는 것은 쉽다"는 어색해요. easy 대신 hard나 difficult가 자연스럽습니다.'},
+ {n:18,sec:'A',type:'mc',q:'다음 대화의 밑줄 친 부분 중 어법상 틀린 것은?',box:"A: ①It was nice ②for you to lend me your umbrella yesterday.\nB: Don't mention it. ③It is always my pleasure ④to help friends. ⑤It was raining so hard.",o:['①','②','③','④','⑤'],a:1,
+  e:'②: nice는 상대방의 친절한 성품을 나타내는 형용사이므로 for you가 아니라 of you를 써야 합니다.'},
+ {n:19,sec:'A',type:'mc',q:'다음 우리말을 영작할 때 5번째로 오는 단어는?',box:'외국인들이 한국어를 배우는 것은 쉽지 않다.\n( easy / foreigners / learn / to / it / is / for / Korean / not )',o:['easy','foreigners','to','for','not'],a:3,
+  e:'It is not easy for foreigners to learn Korean. → 1 It / 2 is / 3 not / 4 easy / 5 for'},
+ {n:20,sec:'A',type:'sa',tag:'서술형',q:'조건에 맞게 우리말을 영어로 쓰시오.\n<조건> 가주어 It과 to부정사, 부정어 not을 사용할 것',box:'그 비밀을 다른 사람들에게 말하지 않는 것이 중요하다.',
+  f:[{l:'문장',acc:['It is important not to tell the secret to others.','It is important not to tell others the secret.']}],e:'가주어 It + is important + not to tell the secret to others.'},
+
+ {n:21,sec:'B',type:'mc',q:'다음 빈칸에 들어갈 말로 알맞은 것은?',box:'My name is Elizabeth, but my close friends call __________ Liz.',o:['I','my','me','mine','myself'],a:2,
+  e:'call 뒤 목적어 자리 → 목적격 me.'},
+ {n:22,sec:'B',type:'mc',q:'밑줄 친 the Big Apple의 문장 성분으로 알맞은 것은?',box:'People call the city the Big Apple.',o:['주어','동사','직접목적어','간접목적어','목적격 보어'],a:4,
+  e:'the city(목적어) = the Big Apple(목적격 보어), 동격 관계의 5형식입니다.'},
+ {n:23,sec:'B',type:'sa',q:'괄호 안에서 알맞은 말을 골라 쓰시오.',box:'(1) We named our new puppy ( Max / to Max ).\n(2) They elected him ( leader / to leader ) of the club.\n(3) His funny jokes made us ( happy / happily ).',
+  f:[{l:'(1)',acc:['Max']},{l:'(2)',acc:['leader']},{l:'(3)',acc:['happy']}],e:'(1)(2) 5형식 동사 뒤에는 전치사 to 없이 명사 보어. (3) 목적어의 상태는 형용사 happy.'},
+ {n:24,sec:'B',type:'mc',q:'다음 중 문장의 형식이 나머지 넷과 다른 하나는?',o:['We call him Mr. Handsome.','The teacher made Minho the class leader.','They named the baby girl Chloe.','My aunt sent me a beautiful postcard.','People consider the old dog a hero.'],a:3,
+  e:'④는 me(간접목적어) ≠ a postcard(직접목적어)인 4형식. 나머지는 모두 5형식.'},
+ {n:25,sec:'B',type:'mc',q:'두 문장에 대한 설명으로 가장 적절한 것은?',box:'(A) My father made me a toy car.\n(B) His effort made him a great scientist.',o:['(A)와 (B) 모두 5형식 문장이다.','(A)에서 me와 a toy car는 동격 관계이다.','(B)에서 him과 a great scientist는 동격 관계이다.','(A)의 made는 사역동사이다.','(B)는 4형식 수여동사 문장이다.'],a:2,
+  e:'(A)는 4형식(me ≠ a toy car), (B)는 5형식(him = a great scientist).'},
+ {n:26,sec:'B',type:'sa',q:'괄호 안 단어들을 바르게 배열하시오.',box:'그들은 자신들의 아들을 David라고 불렀다.\n( David / called / their son / they )',
+  f:[{l:'문장',acc:['They called their son David.']}],e:'주어 + 동사 + 목적어 + 목적격 보어.'},
+ {n:27,sec:'B',type:'mc',q:'다음 중 어법상 어색한 문장은?',o:['She calls her cat Kitty.','We elected Sarah president of our class.','The movie made the actor a superstar.','Please call to me Jenny.','Many people consider him an honest man.'],a:3,
+  e:'call은 전치사 없이 바로 목적어 → Please call me Jenny.'},
+ {n:28,sec:'B',type:'mc',q:'빈칸에 공통으로 들어갈 동사로 가장 적절한 것은?',box:'• They __________ their daughter Amy.\n• She __________ her pet dog Choco.',o:['bought','named','asked','told','gave'],a:1,
+  e:'"~라고 이름 짓다"의 named.'},
+ {n:29,sec:'B',type:'sa',q:'주어진 단어를 모두 사용하여 우리말을 영작하시오.',box:'사람들은 그 건물을 평화의 탑이라고 부른다.\n(People, call, the building, the, Tower, of, Peace)',
+  f:[{l:'문장',acc:['People call the building the Tower of Peace.']}],e:'People call the building the Tower of Peace.'},
+ {n:30,sec:'B',type:'mc',q:'다음 중 밑줄 친 부분이 목적격 보어로 쓰이지 않은 것은?',o:['They chose Brian <u>their captain</u>.','We call our dog <u>Bori</u>.','My uncle gave me <u>a new bicycle</u>.','The news made her <u>a famous singer</u>.','I consider you <u>my best friend</u>.'],a:2,
+  e:'③의 a new bicycle은 4형식의 직접목적어(~을)입니다.'},
+ {n:31,sec:'B',type:'mc',q:'다음 대화의 빈칸에 들어갈 말로 알맞은 것은?',box:'A: Why do people call him "Walking Dictionary"?\nB: Because he knows __________ words and facts!',o:['so few','so many','hardly any','too little','not much'],a:1,
+  e:'"걸어 다니는 사전"이라 부르는 이유 → 많은 단어를 알기 때문. 셀 수 있는 복수명사에는 so many.'},
+ {n:32,sec:'B',type:'mc',q:'다음 중 어법상 옳은 문장만을 있는 대로 고른 것은?',box:'a. My friends call me a dancing machine.\nb. We named to the building Star Tower.\nc. The coach made him the best player in the league.\nd. She calls him as her brother.\ne. The class elected Jisu the monitor.',o:['a, c','a, c, e','b, d','b, c, e','a, b, d, e'],a:1,
+  e:'b: named to → to 삭제, d: calls him as → as 삭제. 옳은 것은 a, c, e.'},
+ {n:33,sec:'B',type:'sa',q:'어법상 틀린 곳을 찾아 바르게 고쳐 쓰시오.',box:'His parents call he a little prince at home.',
+  f:[{l:'틀린 말',acc:['he']},{l:'고친 말',acc:['him']}],e:'call 뒤 목적어 자리 → 목적격 him.'},
+ {n:34,sec:'B',type:'sa',q:'주어진 단어를 활용하여 5형식 문장으로 영작하시오.',box:'사람들은 그 작은 섬을 보물섬이라고 부른다.\n(Treasure Island, the small island, call)',
+  f:[{l:'문장',acc:['People call the small island Treasure Island.']}],e:'People + call + the small island + Treasure Island.'},
+ {n:35,sec:'B',type:'mc',q:'다음 중 밑줄 친 부분이 형용사 목적격 보어인 것은?',o:['They called the baby <u>Joy</u>.','Eating vegetables keeps you <u>healthy</u>.','The club made him <u>vice-president</u>.','We named our boat <u>Blue Ocean</u>.','People call this flower <u>Sunflower</u>.'],a:1,
+  e:'healthy는 목적어 you의 상태를 설명하는 형용사 보어. 나머지는 명사 보어.'},
+ {n:36,sec:'B',type:'mc',q:'다음 빈칸에 들어갈 수 없는 동사는?',box:'The club members __________ him the captain.',o:['called','made','elected','chose','sent'],a:4,
+  e:'sent는 4형식 수여동사("~에게 …을 보내다")라서 "그를 주장으로 ~했다"는 5형식이 될 수 없어요.'},
+ {n:37,sec:'B',type:'mc',q:'다음 글의 밑줄 친 ①~⑤ 중 어법상 알맞지 않은 것은?',box:'Minji has a special pet turtle. She ①calls it ②Ttugi. Her family ③considers it ④a family member. Yesterday, her mom ⑤made to it a small house.',o:['①','②','③','④','⑤'],a:4,
+  e:'⑤: made it a small house(4형식) 또는 made a small house for it(3형식)으로 써야 합니다.'},
+ {n:38,sec:'B',type:'sa',tag:'서술형',q:'<보기>의 단어를 배열하여 5형식 문장을 완성하시오.',box:'<보기> the puppy / Lucky / the children / decided / to call',
+  f:[{l:'문장',acc:['The children decided to call the puppy Lucky.']}],e:'decided의 목적어 to call, call의 목적어 the puppy, 목적격 보어 Lucky.'},
+
+ {n:39,sec:'C',type:'mc',q:'다음 중 어법상 옳은 문장끼리 짝지어진 것은?',box:'ⓐ It is dangerous to touch the wild animal.\nⓑ It is polite for him to greet the elders.\nⓒ People call this animal a red panda.\nⓓ They made him to a leader.\nⓔ It is very difficult for me to understand his lecture.',o:['ⓐ, ⓑ, ⓒ','ⓐ, ⓒ, ⓔ','ⓑ, ⓓ, ⓔ','ⓐ, ⓓ, ⓔ','ⓑ, ⓒ, ⓓ'],a:1,
+  e:'ⓑ polite → of him, ⓓ made him to a leader → to 삭제. 옳은 것은 ⓐ, ⓒ, ⓔ.'},
+ {n:40,sec:'C',type:'multi',q:'다음 글에서 어법상 틀린 것을 두 개 고르시오.',box:'Last summer, I went to a festival in Spain. ⓐIt was exciting to watch the traditional dance. In the festival, people threw tomatoes at each other. ⓑThey call it La Tomatina. At first, ⓒit was hard for me to join the fight. But a friendly boy helped me. ⓓIt was generous for him to share his tomatoes. Now, I ⓔcall him as my best Spanish friend.',o:['ⓐ','ⓑ','ⓒ','ⓓ','ⓔ'],a:[3,4],
+  e:'ⓓ generous는 성품 형용사 → of him, ⓔ call 뒤에 as를 쓰지 않아요.'},
+ {n:41,sec:'C',type:'sa',q:'40번에서 찾은 틀린 부분 두 곳을 바르게 고쳐 쓰시오.',box:'ⓓ It was generous for him to share his tomatoes.\nⓔ Now, I call him as my best Spanish friend.',
+  f:[{l:'ⓓ 고친 문장',acc:['It was generous of him to share his tomatoes.','It was generous of him','of him']},{l:'ⓔ 고친 문장',acc:['Now, I call him my best Spanish friend.','I call him my best Spanish friend.','call him my best Spanish friend']}],
+  e:'ⓓ It was generous of him to share his tomatoes. / ⓔ Now, I call him my best Spanish friend.'},
+ {n:42,sec:'C',type:'sa',q:'두 문장의 It의 문법적 역할을 각각 쓰시오.',box:'(1) It is five kilometers from my house to school.\n(2) It is necessary to drink enough water every day.',
+  f:[{l:'(1)',acc:['비인칭 주어','비인칭','비인칭 주어(거리)']},{l:'(2)',acc:['가주어','가주어 it']}],e:'(1) 거리를 나타내는 비인칭 주어, (2) to부정사구를 대신하는 가주어.'},
+ {n:43,sec:'C',type:'mc',q:'다음 중 단어의 배열이 어법상 가장 자연스러운 것은?',o:['It is for us important to save energy.','It is important for us to save energy.','For us it is important to energy save.','To save energy it is for us important.','It is important to save energy of us.'],a:1,
+  e:'It is + 형용사 + for + 목적격 + to부정사.'},
+ {n:44,sec:'C',type:'sa',q:'어법상 틀린 곳을 찾아 올바른 문장으로 다시 쓰시오.',box:'She calls her smartphone like a mini computer.',
+  f:[{l:'올바른 문장',acc:['She calls her smartphone a mini computer.']}],e:'call은 like나 as 없이 목적어 바로 뒤에 명사 보어.'},
+ {n:45,sec:'C',type:'sa',tag:'서술형',q:'조건에 맞게 영작하시오.\n<조건> 가주어 It, to부정사, 의미상의 주어 for him, impossible / answer / the question 모두 사용',box:'그가 그 질문에 답하는 것은 불가능하다.',
+  f:[{l:'문장',acc:['It is impossible for him to answer the question.']}],e:'It is impossible + for him + to answer the question.'},
+ {n:46,sec:'C',type:'sa',q:'어법상 어색한 부분을 찾아 고치시오.',box:'It was careless of her to leave her bag in the café, but it was kind for the waiter to keep it for her.',
+  f:[{l:'틀린 부분',acc:['for the waiter','for']},{l:'고친 말',acc:['of the waiter','of']}],e:'kind는 성품 형용사 → for the waiter를 of the waiter로.'},
+ {n:47,sec:'C',type:'sa',q:'<보기>의 단어로 5형식 문장을 영작하시오.',box:'<보기> Chicago / the Windy City / people / call',
+  f:[{l:'문장',acc:['People call Chicago the Windy City.']}],e:'교과서 본문 예문: People call Chicago the Windy City.'},
+ {n:48,sec:'C',type:'mc',tag:'고난도',q:'다음 중 어법상 옳은 것만을 고른 것은?',box:'ⓐ It is not healthy to skip breakfast.\nⓑ It is silly of you to believe such a rumor.\nⓒ The coach called him as MVP of the tournament.\nⓓ My grandfather made my brother a wooden chair.\nⓔ It is dangerous of teenagers to drive a car.',o:['ⓐ, ⓑ','ⓐ, ⓑ, ⓓ','ⓑ, ⓒ, ⓔ','ⓐ, ⓓ, ⓔ','ⓐ, ⓑ, ⓒ, ⓓ'],a:1,
+  e:'ⓒ as 삭제, ⓔ dangerous는 일반 형용사 → for teenagers. ⓓ는 4형식으로 올바른 문장.'},
+ {n:49,sec:'C',type:'sa',tag:'서술형',q:'빈칸 (A), (B)에 들어갈 전치사를 쓰시오.',box:'(1) It is difficult ( A ) students to memorize 100 words a day.\n(2) It is wise ( B ) her to save money for the future.',
+  f:[{l:'(A)',acc:['for']},{l:'(B)',acc:['of']}],e:'이유: difficult는 난이도를 나타내는 일반 형용사라 for + 목적격, wise는 사람의 성품·태도를 나타내는 형용사라 of + 목적격을 씁니다.'},
+ {n:50,sec:'C',type:'sa',tag:'서술형 킬러',q:'다음 우리말을 조건에 맞게 한 문장으로 영작하시오.\n<조건>\n• 앞부분: 가주어 It, not to-v, very important, tell lies to friends 사용\n• 뒷부분: call을 쓴 5형식 (an honest person, a true friend)\n• 두 부분을 , and로 연결할 것',box:'친구들에게 거짓말을 하지 않는 것은 매우 중요하다. 그리고 우리는 정직한 사람을 진정한 친구라고 부른다.',
+  f:[{l:'문장',acc:['It is very important not to tell lies to friends, and we call an honest person a true friend.']}],
+  e:'It is very important not to tell lies to friends, and we call an honest person a true friend.'}
+];
+
+/* =========================================================
+   공통 유틸
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const app = $('#app');
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const norm = s => String(s).toLowerCase().replace(/[’‘]/g,"'").replace(/[.,!?"“”➔→:;()\[\]]/g,' ').replace(/\s+/g,'').trim();
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const boxHTML = s => esc(s).replace(/&lt;u&gt;/g,'<u>').replace(/&lt;\/u&gt;/g,'</u>');
+function comboFX(text){ const d=document.createElement('div'); d.className='combo'; d.textContent=text; document.body.appendChild(d); setTimeout(()=>d.remove(),1000); }
+function starsFor(r){ return r>=0.9?3:r>=0.7?2:r>=0.4?1:0; }
+
+const STAGES = [
+ {id:'concept', ic:'🌱', name:'1단계 · 개념 카드', desc:'넘겨 보며 핵심 개념 익히기 + 미니 확인 문제'},
+ {id:'blank',   ic:'🌿', name:'2단계 · 개념 빈칸', desc:'개념 정리 빈칸 20개 채우기'},
+ {id:'forof',   ic:'⚡', name:'3단계 · for vs of 스피드', desc:'떨어지는 형용사를 60초 안에 분류!'},
+ {id:'it',      ic:'🎯', name:'4단계 · it 정체 찾기', desc:'가주어 / 비인칭 / 지시대명사 판별'},
+ {id:'block',   ic:'🧩', name:'5단계 · 문장 블록 조립', desc:'단어 블록으로 문장 완성하기'},
+ {id:'exam',    ic:'🏆', name:'6단계 · 실전 50제', desc:'객관식 29 + 주관식 21, 전 문항 해설'}
+];
+
+function loadProg(){ prog = store.get('prog_'+user.id, {best:{}, exam:{}, wrong:[]}); }
+function saveProg(){ store.set('prog_'+user.id, prog); }
+function setBest(stage, score, max){
+  const r = max? score/max : 0;
+  const old = prog.best[stage];
+  if(!old || r > old.r) prog.best[stage] = {score, max, r, stars:starsFor(r)};
+  saveProg();
+}
+
+/* =========================================================
+   로그인
+   ========================================================= */
+function savedAccounts(){ return store.get('accounts', []); }
+function rememberAccount(acc){
+  const list = savedAccounts().filter(a=>!sameId(a.id,acc.id));
+  list.unshift(acc); store.set('accounts', list.slice(0,10));
+}
+function renderLogin(mode){
+  const saved = savedAccounts();
+  if(!mode) mode = saved.length ? 'id' : 'first';
+  app.innerHTML = `
+  <div class="login-box">
+    <div style="font-size:48px">🌳</div>
+    <h1 class="title-font">EDEN 문법 정원</h1>
+    <div class="lesson">중2 영어 Lesson 7 · 동아(윤정미)<br>가주어 it · call + 목적어 + 목적격 보어</div>
+    <div class="tabs">
+      <button class="${mode==='id'?'on':''}" data-m="id">아이디로 로그인</button>
+      <button class="${mode==='first'?'on':''}" data-m="first">처음 로그인</button>
+    </div>
+    ${mode==='id' ? `
+      ${saved.length? `<div style="font-size:13px;color:var(--sub);margin-bottom:6px">이 기기에서 로그인한 친구</div>
+      <div class="saved-ids">${saved.map(a=>`<button data-id="${esc(a.id)}">${esc(a.name)}</button>`).join('')}</div>`:''}
+      <div class="field"><label>아이디</label><input id="inId" type="password" inputmode="numeric" placeholder="아이디 입력" autocomplete="off"></div>
+    ` : `
+      <div class="field"><label>이름</label><input id="inName" placeholder="예: 홍길동" autocomplete="off"></div>
+      <div class="field"><label>아이디</label><input id="inId" type="password" inputmode="numeric" placeholder="선생님께 받은 아이디" autocomplete="off"></div>
+    `}
+    <div class="msg" id="msg"></div>
+    <button class="btn btn-main" style="width:100%" id="goLogin">입장하기 🌿</button>
+    <div class="roster-info"><span id="rStat">명단 불러오는 중…</span><button class="btn btn-ghost btn-sm" id="reload">명단 새로고침</button></div>
+  </div>`;
+  app.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>renderLogin(b.dataset.m));
+  app.querySelectorAll('.saved-ids button').forEach(b=>b.onclick=()=>{ $('#inId').focus(); $('#msg').className='msg ok'; $('#msg').textContent=`${b.textContent} 학생, 아이디를 입력하세요.`; });
+  $('#goLogin').onclick = ()=>doLogin(mode);
+  app.querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(mode); }));
+  $('#reload').onclick = async ()=>{ $('#rStat').textContent='명단 불러오는 중…'; await loadRoster(); showRosterStat(); };
+  showRosterStat();
+}
+function showRosterStat(){
+  const el = $('#rStat'); if(!el) return;
+  el.textContent = rosterLoaded ? `✅ 명단 ${roster.length}명 연결됨` : (roster.length ? `⚠️ 시트 연결 실패 · 저장된 명단 ${roster.length}명 사용` : '⚠️ 명단을 불러오지 못했어요');
+}
+function doLogin(mode){
+  const msg = $('#msg'); msg.className='msg';
+  const id = ($('#inId').value||'').trim();
+  if(mode==='first'){
+    const name = ($('#inName').value||'').trim();
+    if(!name || !id){ msg.textContent='이름과 아이디를 모두 입력하세요.'; return; }
+    if(!roster.length){ msg.textContent='명단을 불러오지 못했어요. 인터넷 연결을 확인하고 새로고침 해 주세요.'; return; }
+    const hit = roster.find(s=>sameName(s.name,name) && sameId(s.id,id));
+    if(!hit){ msg.textContent='이름 또는 아이디가 명단과 맞지 않아요.'; $('.login-box').classList.add('shake'); setTimeout(()=>$('.login-box').classList.remove('shake'),300); return; }
+    enter(hit);
+  }else{
+    if(!id){ msg.textContent='아이디를 입력하세요.'; return; }
+    const saved = savedAccounts().find(a=>sameId(a.id,id));
+    if(!saved){ msg.textContent="이 기기에서 처음이라면 '처음 로그인'에서 이름과 아이디를 함께 입력하세요."; return; }
+    if(rosterLoaded && !roster.find(s=>sameId(s.id,id))){ msg.textContent='명단에서 아이디를 찾을 수 없어요. 선생님께 문의하세요.'; return; }
+    const fresh = roster.find(s=>sameId(s.id,id));
+    enter(fresh || saved);
+  }
+}
+function enter(acc){
+  user = {name:acc.name, id:acc.id};
+  rememberAccount(user);
+  store.set('last', user.id);
+  loadProg();
+  renderHome();
+}
+function logout(){ renderHome(); }
+function resetAll(){
+  if(!confirm('별점·실전 50제 기록·오답노트를 모두 지울까요?')) return;
+  prog = {best:{}, exam:{}, wrong:[]}; saveProg(); renderHome();
+}
+
+/* =========================================================
+   홈
+   ========================================================= */
+function topbar(){
+  const stars = Object.values(prog.best).reduce((s,b)=>s+(b.stars||0),0);
+  return `<div class="topbar">
+    <div class="who title-font" style="font-size:18px">🌳 EDEN 문법 정원 · 중2 L7</div>
+    <div class="stat"><span class="pill">⭐ ${stars} / 18</span>
+    <button class="btn btn-ghost btn-sm" onclick="renderHome()">홈</button>
+    <button class="btn btn-ghost btn-sm" onclick="resetAll()">기록 초기화</button></div></div>`;
+}
+function renderHome(){
+  const stars = Object.values(prog.best).reduce((s,b)=>s+(b.stars||0),0);
+  const examDone = Object.keys(prog.exam).length;
+  app.innerHTML = topbar() + `
+  <div class="hero">
+    <h2 class="title-font">나의 문법 정원 🌼</h2>
+    <p>중2 Lesson 7 「Let's Enjoy Festivals」<br>① 가주어 it + to부정사 진주어 &nbsp;② call + 목적어 + 목적격 보어</p>
+    <div class="progress-bar"><div style="width:${Math.round(stars/18*100)}%"></div></div>
+    <div class="tree">${stars>=15?'🌳':stars>=8?'🌿':'🌱'}</div>
+  </div>
+  <div class="stages">
+   ${STAGES.map(s=>{ const b=prog.best[s.id];
+     const extra = s.id==='exam' ? `<span class="best">${examDone}/50 풀이</span>` : (b?`<span class="best">최고 ${b.score}/${b.max}</span>`:'');
+     return `<button class="stage" onclick="startStage('${s.id}')">${extra}<div class="ic">${s.ic}</div><h3 class="title-font">${s.name}</h3><p>${s.desc}</p>
+       <div class="stars">${'★'.repeat(b?b.stars:0)}${'☆'.repeat(3-(b?b.stars:0))}</div></button>`; }).join('')}
+  </div>
+  <button class="btn btn-ghost wrongbtn" onclick="startWrong()" ${prog.wrong.length?'':'disabled'}>📒 오답노트 다시 풀기 (${prog.wrong.length}문항)</button>`;
+}
+function startStage(id){
+  ({concept:runConcept, blank:runBlank, forof:runForOf, it:runIt, block:runBlock, exam:runExam})[id]();
+}
+
+/* =========================================================
+   1단계 개념 카드
+   ========================================================= */
+function runConcept(){
+  let i=0, got=0, tried=new Set();
+  const draw=()=>{
+    const c=CONCEPTS[i];
+    app.innerHTML = topbar()+`
+    <div class="game-head"><h2 class="title-font">🌱 개념 카드</h2><span class="pill">${i+1} / ${CONCEPTS.length}</span></div>
+    <div class="flash"><span class="tag">${c.tag}</span><h3 class="title-font">${c.title}</h3><div class="body">${c.body}</div>
+    ${c.check?`<div class="mini-check"><div class="q">✅ 바로 확인: ${esc(c.check.q)}</div><div class="row">${c.check.opts.map((o,k)=>`<button data-k="${k}">${esc(o)}</button>`).join('')}</div><div id="ckmsg" style="font-size:13px;margin-top:6px"></div></div>`:''}
+    </div>
+    <div class="dots">${CONCEPTS.map((_,k)=>`<span class="${k===i?'on':''}"></span>`).join('')}</div>
+    <div class="actions" style="justify-content:space-between">
+      <button class="btn btn-ghost" id="prev" ${i===0?'disabled':''}>← 이전</button>
+      <button class="btn btn-main" id="next">${i===CONCEPTS.length-1?'완료 🎉':'다음 →'}</button></div>`;
+    app.querySelectorAll('.mini-check button').forEach(b=>b.onclick=()=>{
+      if(tried.has(i)) return; tried.add(i);
+      const k=+b.dataset.k, ok=k===c.check.a;
+      if(ok) got++;
+      app.querySelectorAll('.mini-check button').forEach((x,j)=>{ if(j===c.check.a) x.classList.add('ok'); else if(j===k) x.classList.add('no'); });
+      $('#ckmsg').innerHTML = ok?'<b class="grn">정답! 👏</b>':'<b class="red">아쉬워요!</b> 초록색이 정답이에요.';
+    });
+    $('#prev').onclick=()=>{i--;draw();};
+    $('#next').onclick=()=>{ if(i<CONCEPTS.length-1){i++;draw();} else { const m=CONCEPTS.filter(c=>c.check).length; setBest('concept',got,m); showResult('개념 카드 완주!',got,m,'concept'); } };
+  };
+  draw();
+}
+
+/* =========================================================
+   공용 4지선다 엔진 (2단계)
+   ========================================================= */
+function runBlank(){
+  const qs = shuffle(BLANKS);
+  let i=0, score=0, combo=0, hearts=5, wrongs=[];
+  const draw=()=>{
+    const q=qs[i]; const opts=shuffle(q.o);
+    app.innerHTML = topbar()+`
+    <div class="game-head"><h2 class="title-font">🌿 개념 빈칸 채우기</h2>
+      <div class="hud"><span class="hearts">${'❤️'.repeat(hearts)}${'🤍'.repeat(5-hearts)}</span><span class="pill">점수 ${score}</span><span class="pill">🔥 ${combo}</span></div></div>
+    <div class="qbar"><div style="width:${i/qs.length*100}%"></div></div>
+    <div class="qcard"><span class="qnum">${i+1} / ${qs.length}</span>
+      <div class="qtext">${esc(q.t)}</div>
+      <div class="opts">${opts.map(o=>`<button class="opt" data-v="${esc(o)}">${esc(o)}</button>`).join('')}</div>
+      <div id="fb"></div></div>`;
+    app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      const ok = b.dataset.v===q.a;
+      app.querySelectorAll('.opt').forEach(x=>{ x.disabled=true; if(x.dataset.v===q.a) x.classList.add('correct'); });
+      if(ok){ score++; combo++; if(combo>=3) comboFX(combo+' COMBO!'); }
+      else { b.classList.add('wrong'); combo=0; hearts--; wrongs.push(q); }
+      $('#fb').innerHTML = `<div class="feedback ${ok?'good':'bad'}"><b class="big">${ok?'정답! 🌼':'오답 🍂'}</b>정답: <span class="ans">${esc(q.a)}</span></div>
+        <div class="actions"><button class="btn btn-main" id="nx">${(i===qs.length-1||hearts<=0)?'결과 보기':'다음 →'}</button></div>`;
+      $('#nx').onclick=()=>{ if(hearts<=0||i===qs.length-1){ setBest('blank',score,qs.length); showResult(hearts<=0?'하트가 모두 떨어졌어요':'빈칸 채우기 완료!',score,qs.length,'blank'); } else {i++;draw();} };
+    });
+  };
+  draw();
+}
+
+/* =========================================================
+   3단계 for vs of 스피드
+   ========================================================= */
+function runForOf(){
+  app.innerHTML = topbar()+`
+  <div class="game-head"><h2 class="title-font">⚡ for vs of 스피드</h2></div>
+  <div class="qcard" style="text-align:center">
+    <div style="font-size:46px">🧺</div>
+    <div class="qtext">형용사가 하늘에서 떨어져요!<br>땅에 닿기 전에 <span class="blue">FOR</span> 또는 <span style="color:var(--pink)">OF</span> 바구니를 누르세요.</div>
+    <div class="qbox" style="text-align:left">💙 <b>FOR</b>: easy, hard, important, dangerous… (난이도·판단)<br>💗 <b>OF</b>: kind, nice, polite, careless… (사람의 성격·태도)<br>⏱ 60초 · 정답 +10 · 콤보 보너스 · 틀리면 -5</div>
+    <button class="btn btn-main" id="go">시작! 🚀</button></div>`;
+  $('#go').onclick=playForOf;
+}
+function playForOf(){
+  let time=60, score=0, combo=0, right=0, total=0, cur=null, fallTimer=null, tick=null, speed=4200, alive=true;
+  app.innerHTML = topbar()+`
+  <div class="game-head"><h2 class="title-font">⚡ for vs of</h2><div class="hud"><span class="timer" id="tm">⏱ 60</span><span class="pill" id="sc">점수 0</span><span class="pill" id="cb">🔥 0</span></div></div>
+  <div class="arena" id="arena"><div class="ground"></div></div>
+  <div class="baskets"><button class="basket for" data-p="for">FOR<small>난이도·판단</small></button><button class="basket of" data-p="of">OF<small>성격·태도</small></button></div>`;
+  const arena=$('#arena');
+  const spawn=()=>{
+    if(!alive) return;
+    const [adj,p]=ADJ[Math.floor(Math.random()*ADJ.length)];
+    const who=WHO[Math.floor(Math.random()*WHO.length)];
+    const tail=ADJ_TAIL[p][Math.floor(Math.random()*ADJ_TAIL[p].length)];
+    cur={p};
+    const d=document.createElement('div'); d.className='drop';
+    d.innerHTML=`<div class="adj">${adj}</div><div class="sent">It is ${adj} ( ? ) ${who} ${tail}.</div>`;
+    d.style.top='-80px';
+    arena.appendChild(d); cur.el=d;
+    const h=arena.clientHeight;
+    d.animate([{top:'-80px'},{top:(h-80)+'px'}],{duration:speed,easing:'linear',fill:'forwards'});
+    fallTimer=setTimeout(()=>{ judge(null); },speed);
+  };
+  const fx=(c)=>{ const f=document.createElement('div'); f.className='flashfx'; f.style.background=c; arena.appendChild(f); setTimeout(()=>f.remove(),350); };
+  const judge=(pick)=>{
+    if(!cur) return;
+    clearTimeout(fallTimer);
+    total++;
+    if(pick===cur.p){ right++; combo++; score+=10+Math.min(combo,10); fx('#7cc576'); if(combo%5===0) comboFX(combo+' COMBO!'); speed=Math.max(1800,speed-120); }
+    else { combo=0; score=Math.max(0,score-5); fx('#e25a4f'); arena.classList.add('shake'); setTimeout(()=>arena.classList.remove('shake'),300); }
+    cur.el.remove(); cur=null;
+    $('#sc').textContent='점수 '+score; $('#cb').textContent='🔥 '+combo;
+    setTimeout(spawn,180);
+  };
+  document.querySelectorAll('.basket').forEach(b=>b.onclick=()=>judge(b.dataset.p));
+  const key=e=>{ if(e.key==='ArrowLeft'||e.key==='f') judge('for'); if(e.key==='ArrowRight'||e.key==='o') judge('of'); };
+  document.addEventListener('keydown',key);
+  tick=setInterval(()=>{
+    if(!document.body.contains(arena)){ alive=false; clearInterval(tick); clearTimeout(fallTimer); document.removeEventListener('keydown',key); return; }
+    time--; $('#tm').textContent='⏱ '+time;
+    if(time<=0){ alive=false; clearInterval(tick); clearTimeout(fallTimer); document.removeEventListener('keydown',key);
+      setBest('forof',right,Math.max(total,1));
+      showResult('스피드 게임 종료!',right,Math.max(total,1),'forof',`총점 ${score}점`); }
+  },1000);
+  spawn();
+}
+
+/* =========================================================
+   4단계 it 정체 찾기
+   ========================================================= */
+function runIt(){
+  const qs=shuffle(IT_SENT).slice(0,15);
+  let i=0, score=0, combo=0;
+  const draw=()=>{
+    const [s,t]=qs[i];
+    app.innerHTML = topbar()+`
+    <div class="game-head"><h2 class="title-font">🎯 it 정체 찾기</h2><div class="hud"><span class="pill">점수 ${score}</span><span class="pill">🔥 ${combo}</span></div></div>
+    <div class="qbar"><div style="width:${i/qs.length*100}%"></div></div>
+    <div class="qcard"><span class="qnum">${i+1} / ${qs.length}</span>
+      <div class="it-sent">${s}</div>
+      <div class="it-choices">
+        <button class="c1" data-t="가">가주어<small>to부정사가 진짜 주어</small></button>
+        <button class="c2" data-t="비">비인칭 주어<small>날씨·시간·거리…</small></button>
+        <button class="c3" data-t="지">지시대명사<small>"그것"</small></button></div>
+      <div id="fb"></div></div>`;
+    app.querySelectorAll('.it-choices button').forEach(b=>b.onclick=()=>{
+      app.querySelectorAll('.it-choices button').forEach(x=>{ x.disabled=true; x.style.opacity=x.dataset.t===t?1:.35; });
+      const ok=b.dataset.t===t;
+      if(ok){score++;combo++; if(combo>=3) comboFX(combo+' COMBO!');} else combo=0;
+      $('#fb').innerHTML=`<div class="feedback ${ok?'good':'bad'}"><b class="big">${ok?'정답! 🎯':'아쉬워요 🍂'}</b>정답: <span class="ans">${IT_NAME[t]}</span><br>${IT_WHY[t]}</div>
+      <div class="actions"><button class="btn btn-main" id="nx">${i===qs.length-1?'결과 보기':'다음 →'}</button></div>`;
+      $('#nx').onclick=()=>{ if(i===qs.length-1){ setBest('it',score,qs.length); showResult('it 정체 찾기 완료!',score,qs.length,'it'); } else {i++;draw();} };
+    });
+  };
+  draw();
+}
+
+/* =========================================================
+   5단계 문장 블록 조립
+   ========================================================= */
+function runBlock(){
+  const qs=shuffle(BLOCKS).slice(0,8);
+  let i=0, score=0;
+  const draw=()=>{
+    const q=qs[i];
+    const words=q.s.replace(/\.$/,'').split(' ');
+    let pool=shuffle(words.map((w,k)=>({w,k})));
+    let picked=[];
+    let checked=false;
+    const paint=()=>{
+      app.innerHTML = topbar()+`
+      <div class="game-head"><h2 class="title-font">🧩 문장 블록 조립</h2><span class="pill">점수 ${score}</span></div>
+      <div class="qbar"><div style="width:${i/qs.length*100}%"></div></div>
+      <div class="qcard"><span class="qnum">${i+1} / ${qs.length}</span>
+        <div class="qtext">${esc(q.k)}</div>
+        <div class="answer-zone" id="az">${picked.map((p,j)=>`<button class="blk" data-j="${j}">${esc(p.w)}</button>`).join('')||'<span style="color:#9bb08f;font-size:14px;padding:8px">블록을 눌러 순서대로 놓으세요</span>'}</div>
+        <div class="pool">${pool.map(p=>`<button class="blk ${picked.includes(p)?'used':''}" data-k="${p.k}">${esc(p.w)}</button>`).join('')}</div>
+        <div id="fb"></div>
+        <div class="actions"><button class="btn btn-ghost" id="rs">다시 놓기</button><button class="btn btn-main" id="ck" ${picked.length===words.length?'':'disabled'}>확인</button></div></div>`;
+      app.querySelectorAll('.pool .blk').forEach(b=>b.onclick=()=>{ if(checked) return; const p=pool.find(x=>x.k==b.dataset.k); if(!picked.includes(p)){picked.push(p);paint();} });
+      app.querySelectorAll('#az .blk').forEach(b=>b.onclick=()=>{ if(checked) return; picked.splice(+b.dataset.j,1); paint(); });
+      $('#rs').onclick=()=>{ if(checked) return; picked=[]; paint(); };
+      $('#ck').onclick=()=>{
+        checked=true;
+        const ans=picked.map(p=>p.w).join(' ');
+        const ok = norm(ans)===norm(q.s);
+        if(ok) score++;
+        $('#fb').innerHTML=`<div class="feedback ${ok?'good':'bad'}"><b class="big">${ok?'완벽해요! 🧩':'순서가 달라요 🍂'}</b>정답: <span class="ans">${esc(q.s)}</span></div>`;
+        $('#rs').remove();
+        const ck=$('#ck'); ck.textContent=i===qs.length-1?'결과 보기':'다음 →';
+        ck.onclick=()=>{ if(i===qs.length-1){ setBest('block',score,qs.length); showResult('문장 조립 완료!',score,qs.length,'block'); } else {i++;draw();} };
+      };
+    };
+    paint();
+  };
+  draw();
+}
+
+/* =========================================================
+   6단계 실전 50제 + 오답노트
+   ========================================================= */
+let examFilter='ALL';
+function runExam(startN){
+  const list = EXAM.filter(q=> examFilter==='ALL' || q.sec===examFilter);
+  let idx = startN ? Math.max(0,list.findIndex(q=>q.n===startN)) : 0;
+  if(!startN){ const firstUnsolved=list.findIndex(q=>!prog.exam[q.n]); if(firstUnsolved>=0) idx=firstUnsolved; }
+  drawExam(list, idx, 'exam');
+}
+function startWrong(){
+  const list = EXAM.filter(q=>prog.wrong.includes(q.n));
+  if(!list.length) return;
+  drawExam(list,0,'wrong');
+}
+function drawExam(list, idx, mode){
+  const q=list[idx];
+  const solved=Object.values(prog.exam).filter(v=>v==='ok').length;
+  const secName={A:'가주어 it',B:'call 5형식',C:'통합·서술형'};
+  app.innerHTML = topbar()+`
+  <div class="game-head"><h2 class="title-font">${mode==='wrong'?'📒 오답노트':'🏆 실전 50제'}</h2><span class="pill">맞힌 문항 ${solved} / 50</span></div>
+  ${mode==='exam'?`<div class="exam-filter">${[['ALL','전체'],['A','A 가주어'],['B','B call 5형식'],['C','C 통합·서술형']].map(([k,v])=>`<button class="${examFilter===k?'on':''}" data-f="${k}">${v}</button>`).join('')}</div>`:''}
+  <div class="num-grid">${list.map((x,j)=>`<button class="${prog.exam[x.n]||''} ${j===idx?'cur':''}" data-j="${j}">${x.n}</button>`).join('')}</div>
+  <div class="qcard">
+    <span class="qnum">${String(q.n).padStart(2,'0')}</span><span class="qtag">${secName[q.sec]}${q.tag?' · '+q.tag:''}</span><span class="qtag" style="background:#eaf3fc;color:#2b5f96">${q.type==='mc'||q.type==='multi'?'객관식':'주관식'}</span>
+    <div class="qtext" style="margin-top:8px">${esc(q.q)}</div>
+    ${q.box?`<div class="qbox">${boxHTML(q.box)}</div>`:''}
+    <div id="ansArea">${answerArea(q)}</div>
+    <div id="fb"></div>
+    <div class="actions" id="acts">
+      <button class="btn btn-ghost" id="pv" ${idx===0?'disabled':''}>← 이전</button>
+      <button class="btn btn-main" id="sub">채점하기</button>
+    </div>
+  </div>`;
+  app.querySelectorAll('.exam-filter button').forEach(b=>b.onclick=()=>{ examFilter=b.dataset.f; runExam(); });
+  app.querySelectorAll('.num-grid button').forEach(b=>b.onclick=()=>drawExam(list,+b.dataset.j,mode));
+  $('#pv').onclick=()=>drawExam(list,idx-1,mode);
+  let sel = q.type==='multi'?[]:null;
+  app.querySelectorAll('#ansArea .opt').forEach(b=>b.onclick=()=>{
+    const k=+b.dataset.k;
+    if(q.type==='mc'){ sel=k; app.querySelectorAll('#ansArea .opt').forEach(x=>x.classList.toggle('sel',+x.dataset.k===k)); }
+    else { if(sel.includes(k)) sel=sel.filter(v=>v!==k); else sel.push(k); b.classList.toggle('sel'); }
+  });
+  app.querySelectorAll('#ansArea input').forEach(inp=>inp.addEventListener('keydown',e=>{ if(e.key==='Enter') $('#sub').click(); }));
+  $('#sub').onclick=()=>{
+    let ok;
+    if(q.type==='mc'){ if(sel===null){ toast('답을 골라 주세요'); return; } ok = sel===q.a;
+      app.querySelectorAll('#ansArea .opt').forEach(x=>{ x.disabled=true; const k=+x.dataset.k; x.classList.remove('sel'); if(k===q.a) x.classList.add('correct'); else if(k===sel) x.classList.add('wrong'); }); }
+    else if(q.type==='multi'){ if(sel.length!==q.a.length){ toast(q.a.length+'개를 골라 주세요'); return; }
+      ok = q.a.every(v=>sel.includes(v));
+      app.querySelectorAll('#ansArea .opt').forEach(x=>{ x.disabled=true; const k=+x.dataset.k; x.classList.remove('sel'); if(q.a.includes(k)) x.classList.add('correct'); else if(sel.includes(k)) x.classList.add('wrong'); }); }
+    else {
+      const inputs=[...app.querySelectorAll('#ansArea input')];
+      if(inputs.some(x=>!x.value.trim())){ toast('빈칸을 모두 채워 주세요'); return; }
+      ok=true;
+      inputs.forEach((inp,j)=>{ const good=q.f[j].acc.some(a=>norm(a)===norm(inp.value)); inp.classList.add(good?'ok':'no'); inp.disabled=true; if(!good) ok=false; });
+    }
+    prog.exam[q.n]= ok?'ok':'no';
+    if(ok) prog.wrong=prog.wrong.filter(n=>n!==q.n); else if(!prog.wrong.includes(q.n)) prog.wrong.push(q.n);
+    const okCount=Object.values(prog.exam).filter(v=>v==='ok').length;
+    setBest('exam',okCount,50);
+    if(ok) comboFX('정답!');
+    const ansText = q.type==='mc' ? `${'①②③④⑤'[q.a]} ${q.o[q.a].replace(/<\/?u>/g,'')}` :
+                    q.type==='multi' ? q.a.map(k=>q.o[k]).join(', ') :
+                    q.f.map(f=>`${f.l} ${f.acc[0]}`).join(' / ');
+    $('#fb').innerHTML=`<div class="feedback ${ok?'good':'bad'}"><b class="big">${ok?'정답입니다! 🏆':'오답 🍂 오답노트에 저장했어요'}</b>정답: <span class="ans">${esc(ansText)}</span><br>💡 ${esc(q.e)}</div>`;
+    const sub=$('#sub');
+    if(idx<list.length-1){ sub.textContent='다음 문제 →'; sub.onclick=()=>drawExam(list, idx+1, mode); }
+    else { sub.textContent='결과 보기'; sub.onclick=()=>examSummary(); }
+  };
+}
+function answerArea(q){
+  if(q.type==='mc'||q.type==='multi'){
+    const marks = q.type==='multi' ? ['','','','',''] : ['①','②','③','④','⑤'];
+    return `${q.type==='multi'?'<div style="font-size:13px;color:var(--sub);margin-bottom:6px">두 개를 골라 주세요</div>':''}<div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="no">${marks[k]}</span>${boxHTML(o)}</button>`).join('')}</div>`;
+  }
+  return q.f.map(f=>`<div class="sa-field"><label>${esc(f.l)}</label><input autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="답을 입력하세요"></div>`).join('')
+    + `<div style="font-size:12px;color:var(--sub)">※ 대소문자·마침표·쉼표는 채점에 영향을 주지 않아요. 철자와 띄어쓰기는 정확히!</div>`;
+}
+function examSummary(){
+  const ok=Object.values(prog.exam).filter(v=>v==='ok').length;
+  const done=Object.keys(prog.exam).length;
+  showResult('실전 50제 결과',ok,50,'exam',`푼 문항 ${done} / 50 · 오답 ${prog.wrong.length}문항`);
+}
+function toast(t){ const d=document.createElement('div'); d.className='combo'; d.style.fontSize='22px'; d.style.color='#fff'; d.style.background='#1f2d1f'; d.style.padding='10px 18px'; d.style.borderRadius='12px'; d.style.textShadow='none'; d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),1000); }
+
+/* =========================================================
+   결과
+   ========================================================= */
+function showResult(title,score,max,stage,extra){
+  const st=starsFor(score/max);
+  const em = st===3?'🌳':st===2?'🌿':st===1?'🌱':'🍂';
+  const msg = st===3?'완벽해요! 정원이 무럭무럭 자라요!':st===2?'잘했어요! 조금만 더 다듬어 볼까요?':st===1?'좋은 시작이에요. 한 번 더 도전!':'개념 카드부터 다시 보고 오면 쉬워질 거예요!';
+  app.innerHTML = topbar()+`
+  <div class="qcard result">
+    <div class="big">${em}</div><h2 class="title-font">${title}</h2>
+    <div class="stars">${'★'.repeat(st)}${'☆'.repeat(3-st)}</div>
+    <div class="score"><b>${score}</b> / ${max} 정답</div>
+    ${extra?`<div style="color:var(--sub);margin-bottom:6px">${extra}</div>`:''}
+    <p style="color:var(--sub);margin:10px 0 18px">${msg}</p>
+    <div class="actions" style="justify-content:center">
+      <button class="btn btn-ghost" onclick="startStage('${stage}')">다시 하기</button>
+      <button class="btn btn-main" onclick="renderHome()">정원으로 🌳</button></div>
+  </div>`;
+}
+
+/* =========================================================
+   시작
+   ========================================================= */
+/* 로그인 없이 바로 시작 (기록은 이 기기에 저장) */
+user = {name:'나', id:'guest'};
+loadProg();
+renderHome();
+</script>
+</body>
+</html>
